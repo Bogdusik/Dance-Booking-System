@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enroll</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>Enroll in Course</h1>
+
+    <form action="/enrol/{{course._id}}" method="post">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <input type="tel" name="phone" placeholder="Your Phone" required />
+
+      <select name="classId" class="enroll-select" required>
+        <option value="">-- Select a Class --</option>
+        {{#classes}}
+          <option value="{{_id}}">{{date}} — {{time}} — {{location}}</option>
+        {{/classes}}
+      </select>
+
+      <div style="margin-top: 15px;">
+        <a href="/course/{{course._id}}" class="button-warning">Go Back</a>
+        <button type="submit" class="button-primary">Enroll</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

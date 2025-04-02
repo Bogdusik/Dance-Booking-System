@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#764ba2" />
+  <meta name="description" content="Modern Dance Class Booking App" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="manifest" href="/manifest.json" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>Login</h1>
+
+    {{#error_msg}}
+      <div class="flash-error">{{error_msg}}</div>
+    {{/error_msg}}
+
+    <form action="/auth/login" method="post">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+      <input name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+
+      <div style="margin-top: 15px;">
+        <a href="/" class="button-warning">Go Back</a>
+        <button type="submit" class="button-primary">Login</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const flash = document.querySelector('.flash-error');
+    if (flash) {
+      setTimeout(() => flash.style.display = 'none', 3000);
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(reg => console.log('Service Worker registered:', reg))
+        .catch(err => console.error('SW registration failed:', err));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Class List</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="card-container">
+    <h1>All Classes with Participants</h1>
+
+    {{#classes}}
+      <div class="card">
+        <p><strong>Course:</strong> {{courseName}}</p>
+        <p><strong>Date:</strong> {{date}}, <strong>Time:</strong> {{time}}</p>
+        <p><strong>Location:</strong> {{location}}</p>
+
+        <h2>Participants</h2>
+
+        {{#participants.length}}
+          <ul>
+            {{#participants}}
+              <li>{{name}} — {{email}} — {{phone}}</li>
+            {{/participants}}
+          </ul>
+        {{/participants.length}}
+
+        {{^participants.length}}
+          <p>No participants.</p>
+        {{/participants.length}}
+      </div>
+    {{/classes}}
+
+    <a href="/" class="button-warning">Back to Dashboard</a>
+  </div>
+</body>
+</html>
