@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Class</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>Edit Class</h1>
+
+    <form action="/organiser/edit-class/{{cls._id}}" method="POST">
+      <input name="date" value="{{cls.date}}" placeholder="Date" required />
+      <input name="time" value="{{cls.time}}" placeholder="Time" required />
+      <input name="location" value="{{cls.location}}" placeholder="Location" required />
+      <input name="price" value="{{cls.price}}" placeholder="Price" required />
+      <textarea name="description" placeholder="Description">{{cls.description}}</textarea>
+
+      <button type="submit" class="button-primary">Update Class</button>
+      <a href="/organiser/dashboard" class="button-secondary">Back to Dashboard</a>
+    </form>
+  </div>
+</body>
+</html>

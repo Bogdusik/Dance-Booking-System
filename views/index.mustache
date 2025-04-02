@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+  <div class="form-container">
+    {{#success_msg}}
+      <div class="flash-success">{{success_msg}}</div>
+    {{/success_msg}}
+
+    <h1>Welcome to Dance Booking</h1>
+
+    {{#user}}
+      <p style="text-align: center;">
+        Logged in as <strong>{{user.username}}</strong> ({{user.role}})
+      </p>
+
+      <div style="text-align: center;">
+        <a href="/courses" class="button-secondary">View Courses</a>
+
+        {{#isOrganiser}}
+          <a href="/organiser/dashboard" class="button-warning">Admin Panel</a>
+          <a href="/organiser/class-list" class="button-warning">All Participants</a>
+          <a href="/organiser/users" class="button-warning">Manage Users</a>
+        {{/isOrganiser}}
+
+        <form action="/auth/logout" method="get" style="display: inline;">
+          <button class="button-warning">Logout</button>
+        </form>
+      </div>
+    {{/user}}
+
+    {{^user}}
+      <div style="text-align: center;">
+        <a href="/courses" class="button-secondary">View Courses</a>
+        <a href="/auth/login" class="button-primary">Login</a>
+        <a href="/auth/register" class="button-secondary">Register</a>
+      </div>
+    {{/user}}
+  </div>
+
+  <script>
+    const flash = document.querySelector('.flash-success');
+    if (flash) {
+      setTimeout(() => flash.style.display = 'none', 3000);
+    }
+  </script>
+</body>
+</html>
