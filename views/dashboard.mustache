@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>Admin Panel</h1>
+
+    <form action="/organiser/add-course" method="post">
+      <input name="name" placeholder="Course Name" required />
+      <textarea name="description" placeholder="Course Description"></textarea>
+      <input name="duration" placeholder="Duration (e.g., 12 weeks)" required />
+      <button type="submit" class="button-primary">Add Course</button>
+    </form>
+
+    <form action="/organiser/add-class" method="post">
+      <label for="courseId">Select Course:</label>
+      <select name="courseId" required>
+        <option value="">-- Select a Course --</option>
+        {{#courses}}
+          <option value="{{_id}}">{{name}}</option>
+        {{/courses}}
+      </select>
+
+      <input name="date" placeholder="Class Date" required />
+      <input name="time" placeholder="Time" required />
+      <input name="location" placeholder="Location" required />
+      <input name="price" placeholder="Price" required />
+      <textarea name="description" placeholder="Class Description"></textarea>
+
+      <button type="submit" class="button-secondary">Add Class</button>
+      <a href="/" class="button-warning">Go to HomePage</a>
+    </form>
+
+    <h2>Existing Courses</h2>
+    {{#courses}}
+      <div class="card">
+        <p><strong>Name:</strong> {{name}}</p>
+        <p><strong>Description:</strong> {{description}}</p>
+        <p><strong>Duration:</strong> {{duration}}</p>
+        <form action="/organiser/delete-course/{{_id}}" method="POST" onsubmit="return confirm('Delete this course?')">
+          <button class="button-warning">Delete Course</button>
+        </form>
+      </div>
+    {{/courses}}
+
+    <h2>Existing Classes</h2>
+    {{#classes}}
+      <div class="card">
+        <p><strong>Course ID:</strong> {{courseId}}</p>
+        <p><strong>Date:</strong> {{date}}</p>
+        <p><strong>Time:</strong> {{time}}</p>
+        <p><strong>Location:</strong> {{location}}</p>
+
+        <div style="display: flex; gap: 10px;">
+          <form action="/organiser/delete-class/{{_id}}" method="POST" onsubmit="return confirm('Delete this class?')">
+            <button class="button-warning">Delete Class</button>
+          </form>
+          <a href="/organiser/edit-class/{{_id}}" class="button-secondary">Edit</a>
+        </div>
+      </div>
+    {{/classes}}
+  </div>
+</body>
+</html>

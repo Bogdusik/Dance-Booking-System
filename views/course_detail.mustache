@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Course Details</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="card-container">
+    {{#success_msg}}
+      <div class="flash-success">{{success_msg}}</div>
+    {{/success_msg}}
+
+    <h1>{{course.name}}</h1>
+    <p>{{course.description}}</p>
+
+    <h2>Class Schedule</h2>
+    {{#classes}}
+      <div class="card">
+        <p><strong>Date:</strong> {{date}}, <strong>Time:</strong> {{time}}</p>
+        <p><strong>Location:</strong> {{location}}, <strong>Price:</strong> £{{price}}</p>
+      </div>
+    {{/classes}}
+
+    <h2>Participants</h2>
+    {{#participants.length}}
+      <ul>
+        {{#participants}}
+          <li>{{name}} — {{email}} — {{phone}}</li>
+        {{/participants}}
+      </ul>
+    {{/participants.length}}
+
+    {{^participants.length}}
+      <p>No participants enrolled yet.</p>
+    {{/participants.length}}
+
+    <a href="/courses" class="button-warning">Go Back</a>
+    <a href="/enrol/{{course._id}}" class="button-primary">Enroll</a>
+  </div>
+
+  <script>
+    const flash = document.querySelector('.flash-success');
+    if (flash) {
+      setTimeout(() => flash.style.display = 'none', 3000);
+    }
+  </script>
+</body>
+</html>

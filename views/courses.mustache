@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Courses</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+  <div class="card-container">
+    <h1>All Courses</h1>
+
+    {{#courses}}
+      <div class="card">
+        <h2>{{name}}</h2>
+        <p>{{description}}</p>
+        <a href="/course/{{_id}}" class="button-secondary">More Details</a>
+      </div>
+    {{/courses}}
+
+    <a href="/" class="button-warning">Go Back</a>
+  </div>
+</body>
+</html>

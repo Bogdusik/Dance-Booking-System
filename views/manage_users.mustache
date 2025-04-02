@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Users</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h1>All Users</h1>
+
+    <h2>Organisers</h2>
+    {{#organisers}}
+      <div class="card">
+        <p><strong>Username:</strong> {{username}}</p>
+        <p><strong>Role:</strong> organiser</p>
+
+        {{^isSelf}}
+          <form action="/organiser/delete-user/{{_id}}" method="POST" onsubmit="return confirm('Delete this organiser?')">
+            <button class="button-warning">Delete Organiser</button>
+          </form>
+        {{/isSelf}}
+      </div>
+    {{/organisers}}
+
+    <h2>Users</h2>
+    {{#users}}
+      <div class="card">
+        <p><strong>Username:</strong> {{username}}</p>
+        <p><strong>Role:</strong> user</p>
+
+        <form action="/organiser/delete-user/{{_id}}" method="POST" onsubmit="return confirm('Delete this user?')">
+          <button class="button-warning">Delete User</button>
+        </form>
+      </div>
+    {{/users}}
+
+    {{^users}}
+      <p>No users registered.</p>
+    {{/users}}
+
+    <a href="/" class="button-secondary">Back to Home</a>
+  </div>
+</body>
+</html>

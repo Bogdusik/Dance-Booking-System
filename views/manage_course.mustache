@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Course</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="card-container">
+    <h1>Participants for {{courseName}}</h1>
+
+    <p>
+      <strong>Date:</strong> {{cls.date}}, 
+      <strong>Time:</strong> {{cls.time}}, 
+      <strong>Location:</strong> {{cls.location}}, 
+      <strong>Duration:</strong> {{duration}}
+    </p>
+
+    <div class="card">
+      {{#cls.participants}}
+        <p>{{name}} — {{email}}</p>
+      {{/cls.participants}}
+
+      {{^cls.participants}}
+        <p>No participants yet.</p>
+      {{/cls.participants}}
+    </div>
+
+    <a href="/organiser/dashboard" class="button-secondary">Back to Dashboard</a>
+  </div>
+</body>
+</html>
