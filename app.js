@@ -4,7 +4,6 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
 const helmet = require('helmet');
-const csrf = require('csurf');
 require('dotenv').config();
 
 const app = express();
@@ -15,7 +14,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
-app.use(helmet());
+
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: false
+}));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
@@ -25,14 +28,11 @@ app.use(session({
 
 app.use(flash());
 
-const csrfProtection = csrf();
-app.use(csrfProtection);
-
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
-  res.locals.csrfToken = req.csrfToken();
+  res.locals.csrfToken = '';
   next();
 });
 
