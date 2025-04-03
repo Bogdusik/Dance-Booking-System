@@ -18,7 +18,12 @@ module.exports = {
     db.find(query, callback);
   },
 
-  remove(query, options, callback) {
-    db.remove(query, options, callback);
+  remove(query, options) {
+    return new Promise((resolve, reject) => {
+      db.remove(query, options, (err, numRemoved) => {
+        if (err) reject(err);
+        else resolve(numRemoved);
+      });
+    });
   }
 };
