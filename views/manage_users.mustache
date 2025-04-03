@@ -9,6 +9,15 @@
   <div class="form-container">
     <h1>All Users</h1>
 
+    <!-- ✅ Flash-сообщения -->
+    {{#success_msg}}
+      <p class="flash-success">{{.}}</p>
+    {{/success_msg}}
+
+    {{#error_msg}}
+      <p class="flash-error">{{.}}</p>
+    {{/error_msg}}
+
     <h2>Organisers</h2>
     {{#organisers}}
       <div class="card">

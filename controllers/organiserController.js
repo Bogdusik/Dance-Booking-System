@@ -16,10 +16,12 @@ const findCourseById = find(courseDb.findOne).bind(courseDb);
 const findClassById = find(classDb.findOne).bind(classDb);
 const updateClass = find(classDb.update).bind(classDb);
 const findUserById = find(userDb.findOne).bind(userDb);
-const removeUser = find(userDb.remove).bind(userDb);
 const findAllUsers = find(userDb.find).bind(userDb);
-const removeEnrolments = find(enrolmentDb.remove).bind(enrolmentDb);
 const insertUser = find(userDb.insert).bind(userDb);
+
+// ⚠️ removeUser — не промисифицируем, он уже возвращает Promise
+const removeUser = userDb.remove;
+const removeEnrolments = enrolmentDb.remove;
 
 exports.validateCourse = [
   body('name').trim().notEmpty().withMessage('Course name is required'),
@@ -199,18 +201,29 @@ exports.deleteUser = async (req, res) => {
     }
 
     const userEmail = user.email;
-    await removeUser({ _id: req.params.id });
+
+    await userDb.remove({ _id: req.params.id }, {});
 
     if (userEmail) {
-      await removeEnrolments({ email: userEmail }, { multi: true });
-      req.flash('success_msg', 'User and enrolments deleted.');
-    } else {
-      req.flash('success_msg', 'User deleted (no enrolments).');
+      enrolmentDb.find({ email: userEmail }, (err, enrolments) => {
+        if (err) {
+          console.error('Error fetching enrolments:', err);
+        } else {
+          enrolments.forEach(e => {
+            enrolmentDb.remove({ _id: e._id }, {}, removeErr => {
+              if (removeErr) {
+                console.error(`Error removing enrolment ${e._id}:`, removeErr);
+              }
+            });
+          });
+        }
+      });
     }
 
+    req.flash('success_msg', 'User deleted successfully.');
     res.redirect('/organiser/users');
   } catch (err) {
-    console.error(err);
+    console.error('Delete user failed:', err);
     req.flash('error_msg', 'Failed to delete user.');
     res.redirect('/organiser/users');
   }
