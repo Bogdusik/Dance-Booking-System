@@ -70,8 +70,8 @@ p {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   color: var(--text);
-  max-width: 750px;
-  width: 100%;
+  max-width: 680px;
+  width: 75%;
   margin: 20px auto;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
