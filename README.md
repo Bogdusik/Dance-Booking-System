@@ -42,18 +42,19 @@ _A user-friendly web platform for booking dance classes, managing courses, and e
 
 ## 📸 Screenshots
 
-> **Home Page**
-![Login Screenshot](https://github.com/user-attachments/assets/8c5d55ea-f999-43f1-a2d4-7f31a59b3945)
+## 🏠 Home Page  
+<img width="1728" alt="Home Page Screenshot" src="https://github.com/user-attachments/assets/aab94363-1734-4aa3-a4e2-cbbdafe04cf8" />
 
-> **Login Page**  
-![Login Screenshot](https://github.com/user-attachments/assets/f1c03046-42cf-45d5-b0cb-7d32e5a2fa24)
+## 🔐 Login Page  
+<img width="1728" alt="Login Screenshot" src="https://github.com/user-attachments/assets/5496ebfa-7bd3-42a4-b90f-68f71888d117" />
 
-> **Courses Overview**  
-![Courses Screenshot](https://github.com/user-attachments/assets/279ff9ec-97ad-465d-97f1-4627e660d3e2)
+## 📚 Courses Overview  
+<img width="1711" alt="Courses Overview Screenshot" src="https://github.com/user-attachments/assets/9f40a838-2122-4b7f-993e-5c9162e6f9cf" />
 
-> **Admin Panel**  
-![Admin Panel Screenshot](https://github.com/user-attachments/assets/edc53b65-982e-4260-8575-9924e6367e83)
+## 🛠️ Admin Panel  
+<img width="1712" alt="Admin Panel Screenshot" src="https://github.com/user-attachments/assets/e4d56622-5001-4ea1-b359-3ad831774c21" />
 ✨ **...and many more exciting features await you—discover them as you explore the app!** ✨
+
 
 ## 🚀 Getting Started
 
