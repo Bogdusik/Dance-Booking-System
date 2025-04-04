@@ -75,6 +75,20 @@ npm start or npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
+
+## 🧪 Automated Testing
+
+This project includes **10 automated tests** to validate routing, access control, form validation, and error handling.
+
+- ✅ Tested with: `Mocha`, `Chai`, `Supertest`
+- 📂 Tests located in: `tests/app.test.js`
+- 📄 Summary available in: [`test_report.md`](./test_report.md)
+
+**Run tests with:**
+```bash
+npm test
+```
+
 ## 🚧 Upcoming Features
 - 💳 **Payment integration** (Stripe)
 - 📧 **Notifications & reminders**
