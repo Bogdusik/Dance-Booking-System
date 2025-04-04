@@ -14,6 +14,7 @@ exports.getCourses = (req, res) => {
 
 exports.getCourseDetail = (req, res) => {
   const { id } = req.params;
+  const isAdmin = req.session.user?.role === 'organiser';
 
   courseDb.findOne({ _id: id }, (err, course) => {
     if (err || !course) return handleError(res, 'Course not found', 404);
@@ -30,11 +31,9 @@ exports.getCourseDetail = (req, res) => {
       enrolmentDb.find({ courseId: id }, (err, enrolments) => {
         if (err) return handleError(res, 'Enrolment loading error');
 
-        const participants = enrolments.map(({ name, email, phone }) => ({
-          name,
-          email,
-          phone
-        }));
+        const participants = enrolments.map(({ name, email, phone }) => {
+          return isAdmin ? { name, email, phone } : { name };
+        });
 
         res.render('course_detail', {
           course,
