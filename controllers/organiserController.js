@@ -19,7 +19,6 @@ const findUserById = find(userDb.findOne).bind(userDb);
 const findAllUsers = find(userDb.find).bind(userDb);
 const insertUser = find(userDb.insert).bind(userDb);
 
-// ⚠️ removeUser — не промисифицируем, он уже возвращает Promise
 const removeUser = userDb.remove;
 const removeEnrolments = enrolmentDb.remove;
 
@@ -69,7 +68,6 @@ exports.dashboard = async (req, res) => {
 
 exports.addCourse = async (req, res) => {
   if (handleValidation(req, res, '/organiser/dashboard')) return;
-
   const { name, description, duration } = req.body;
   try {
     await insertCourse({ name, description, duration });
@@ -83,20 +81,16 @@ exports.addCourse = async (req, res) => {
 
 exports.addClass = async (req, res) => {
   if (handleValidation(req, res, '/organiser/dashboard')) return;
-
   const { courseId, date, time, location, price, description } = req.body;
   try {
     const course = await findCourseById({ _id: courseId });
-    if (!course) {
-      req.flash('error_msg', 'Course not found.');
-      return res.redirect('/organiser/dashboard');
-    }
+    if (!course) throw new Error('Course not found');
 
     await insertClass({ courseId: course._id, date, time, location, price, description });
     res.redirect('/organiser/dashboard');
   } catch (err) {
     console.error(err);
-    req.flash('error_msg', 'Failed to add class.');
+    req.flash('error_msg', err.message || 'Failed to add class.');
     res.redirect('/organiser/dashboard');
   }
 };
@@ -114,7 +108,6 @@ exports.editClassForm = async (req, res) => {
 
 exports.updateClass = async (req, res) => {
   if (handleValidation(req, res, '/organiser/dashboard')) return;
-
   const { date, time, location, price, description } = req.body;
   try {
     await updateClass({ _id: req.params.id }, {
@@ -128,61 +121,51 @@ exports.updateClass = async (req, res) => {
   }
 };
 
-exports.listParticipants = (req, res) => {
-  const { classId } = req.params;
-
-  classDb.findOne({ _id: classId }, (err, cls) => {
+exports.listParticipants = async (req, res) => {
+  try {
+    const cls = await findClassById({ _id: req.params.classId });
     if (!cls) return res.status(404).send('Class not found');
 
-    courseDb.findOne({ _id: cls.courseId }, (err, course) => {
-      const duration = course?.duration || 'N/A';
-      const courseName = course?.name || 'Unknown Course';
-      res.render('manage_course', { cls, duration, courseName });
+    const course = await findCourseById({ _id: cls.courseId });
+    res.render('manage_course', {
+      cls,
+      duration: course?.duration || 'N/A',
+      courseName: course?.name || 'Unknown Course'
     });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading participants');
+  }
 };
 
-exports.fullClassList = (req, res) => {
-  classDb.find({}, async (err, classes) => {
-    if (err) return res.status(500).send('Error fetching classes');
-    if (!classes || classes.length === 0) return res.render('class_list', { classes: [] });
+exports.fullClassList = async (req, res) => {
+  try {
+    const classes = await findClasses({});
+    const enriched = await Promise.all(classes.map(async cls => {
+      const course = await findCourseById({ _id: cls.courseId });
+      const enrolments = await util.promisify(enrolmentDb.find).bind(enrolmentDb)({ classId: cls._id });
 
-    try {
-      const enriched = await Promise.all(
-        classes.map(async cls => {
-          const [course, enrolments] = await Promise.all([
-            new Promise(resolve => courseDb.findOne({ _id: cls.courseId }, (e, c) => resolve(c))),
-            new Promise(resolve => enrolmentDb.find({ classId: cls._id }, (e, r) => resolve(r)))
-          ]);
+      return {
+        ...cls,
+        courseName: course?.name || 'Unknown',
+        participants: enrolments.map(({ name, email, phone }) => ({ name, email, phone }))
+      };
+    }));
 
-          const participants = (enrolments || []).map(({ name, email, phone }) => ({ name, email, phone }));
-
-          return {
-            ...cls,
-            courseName: course?.name || 'Unknown',
-            participants
-          };
-        })
-      );
-
-      res.render('class_list', { classes: enriched });
-    } catch (e) {
-      console.error(e);
-      res.status(500).send('Failed to load class list');
-    }
-  });
+    res.render('class_list', { classes: enriched });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to load class list');
+  }
 };
 
 exports.manageUsers = async (req, res) => {
   try {
     const allUsers = await findAllUsers({});
-    const organisers = allUsers
-      .filter(u => u.role === 'organiser')
-      .map(u => ({
-        ...u,
-        isSelf: req.session.user?._id === u._id
-      }));
-
+    const organisers = allUsers.filter(u => u.role === 'organiser').map(u => ({
+      ...u,
+      isSelf: req.session.user?._id === u._id
+    }));
     const users = allUsers.filter(u => u.role === 'user');
     res.render('manage_users', { organisers, users });
   } catch (err) {
@@ -195,43 +178,28 @@ exports.manageUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await findUserById({ _id: req.params.id });
-    if (!user) {
-      req.flash('error_msg', 'User not found.');
-      return res.redirect('/organiser/users');
-    }
+    if (!user) throw new Error('User not found');
 
-    const userEmail = user.email;
+    await removeUser({ _id: req.params.id }, {});
 
-    await userDb.remove({ _id: req.params.id }, {});
-
-    if (userEmail) {
-      enrolmentDb.find({ email: userEmail }, (err, enrolments) => {
-        if (err) {
-          console.error('Error fetching enrolments:', err);
-        } else {
-          enrolments.forEach(e => {
-            enrolmentDb.remove({ _id: e._id }, {}, removeErr => {
-              if (removeErr) {
-                console.error(`Error removing enrolment ${e._id}:`, removeErr);
-              }
-            });
-          });
-        }
-      });
+    if (user.email) {
+      const enrolments = await util.promisify(enrolmentDb.find).bind(enrolmentDb)({ email: user.email });
+      await Promise.all(enrolments.map(e =>
+        util.promisify(enrolmentDb.remove).bind(enrolmentDb)({ _id: e._id }, {})
+      ));
     }
 
     req.flash('success_msg', 'User deleted successfully.');
     res.redirect('/organiser/users');
   } catch (err) {
     console.error('Delete user failed:', err);
-    req.flash('error_msg', 'Failed to delete user.');
+    req.flash('error_msg', err.message || 'Failed to delete user.');
     res.redirect('/organiser/users');
   }
 };
 
 exports.register = async (req, res) => {
   if (handleValidation(req, res, '/auth/register')) return;
-
   const { username, password, role } = req.body;
   try {
     const existingUser = await userDb.findOne({ username });
