@@ -26,7 +26,11 @@
     {{#participants.length}}
       <ul>
         {{#participants}}
-          <li>{{name}} — {{email}} — {{phone}}</li>
+          <li>
+            {{name}}
+            {{#email}} — {{email}}{{/email}}
+            {{#phone}} — {{phone}}{{/phone}}
+          </li>
         {{/participants}}
       </ul>
     {{/participants.length}}
