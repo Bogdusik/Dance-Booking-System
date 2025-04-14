@@ -97,12 +97,16 @@ p {
   padding: 30px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  max-width: 430px;
+  max-width: 530px;
   width: 90%;
   margin: 40px;
   border: 3px solid rgba(255, 255, 255, 0.15);
   color: var(--light);
   animation: fadeInDown 1.2s ease;
+}
+
+.info-section{
+  text-align: justify;
 }
 
 .card-container {
