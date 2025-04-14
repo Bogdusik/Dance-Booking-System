@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Home</title>
+  <title>Dance Booking | Home</title>
   <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    .button-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="form-container">
@@ -11,14 +20,23 @@
       <div class="flash-success">{{success_msg}}</div>
     {{/success_msg}}
 
-    <h1>Welcome to Dance Booking</h1>
+    <h1 style="text-align: center;">Welcome to Dance Booking</h1>
+
+    <section class="info-section" style="text-align: justify;">
+      <p>
+        We offer a variety of dance courses for all levels of fitness and ability. Our sessions range 
+        from weekend workshops with intensive training to 12-week blocks of weekly classes. With 
+        around five sets of classes running concurrently and special events held throughout the year, 
+        our mission is to bring dance to everyone in the community.
+      </p>
+    </section>
 
     {{#user}}
       <p style="text-align: center;">
         Logged in as <strong>{{user.username}}</strong> ({{user.role}})
       </p>
 
-      <div style="text-align: center;">
+      <div class="button-group">
         <a href="/courses" class="button-secondary">View Courses</a>
 
         {{#isOrganiser}}
@@ -27,14 +45,14 @@
           <a href="/organiser/users" class="button-warning">Manage Users</a>
         {{/isOrganiser}}
 
-        <form action="/auth/logout" method="get" style="display: inline;">
+        <form action="/auth/logout" method="get">
           <button class="button-warning">Logout</button>
         </form>
       </div>
     {{/user}}
 
     {{^user}}
-      <div style="text-align: center;">
+      <div class="button-group">
         <a href="/courses" class="button-secondary">View Courses</a>
         <a href="/auth/login" class="button-primary">Login</a>
         <a href="/auth/register" class="button-secondary">Register</a>
