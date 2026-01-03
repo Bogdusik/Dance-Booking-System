@@ -5,6 +5,7 @@ const flash = require('connect-flash');
 const compression = require('compression');
 const helmet = require('helmet');
 const path = require('path');
+const logger = require('./utils/logger');
 require('dotenv').config();
 
 const app = express();
@@ -42,9 +43,21 @@ app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/organiser', require('./routes/organiser'));
 
+// 404 handler - must be after all routes
+const { notFoundHandler, errorHandler } = require('./middlewares/errorHandler');
+app.use(notFoundHandler);
+
+// Error handler - must be last
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
 if (require.main === module) {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`, {
+      environment: process.env.NODE_ENV || 'development',
+      port: PORT
+    });
+  });
 }
 
 module.exports = app;
