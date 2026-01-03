@@ -48,6 +48,10 @@ const errorHandler = (err, req, res, next) => {
 
   // Send response
   if (req.accepts('html')) {
+    // For 404 errors, send status instead of redirect (especially in tests)
+    if (statusCode === 404) {
+      return res.status(404).send('Not Found');
+    }
     // For HTML requests, redirect or render error page
     const redirectPath = req.originalUrl.startsWith('/auth') 
       ? req.originalUrl 
