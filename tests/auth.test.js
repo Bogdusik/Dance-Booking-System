@@ -10,18 +10,46 @@ const insertUser = util.promisify(userDb.insert).bind(userDb);
 const removeUser = userDb.remove;
 
 describe('Authentication Tests', function () {
-  let testUser;
+  this.timeout(10000);
 
   beforeEach(async function () {
     // Clean up test users
-    await removeUser({ username: 'testuser' }, { multi: true });
-    await removeUser({ username: 'testorganiser' }, { multi: true });
+    try {
+      await new Promise((resolve, reject) => {
+        removeUser({ username: 'testuser' }, { multi: true }, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+      await new Promise((resolve, reject) => {
+        removeUser({ username: 'testorganiser' }, { multi: true }, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
   });
 
   afterEach(async function () {
     // Clean up after tests
-    await removeUser({ username: 'testuser' }, { multi: true });
-    await removeUser({ username: 'testorganiser' }, { multi: true });
+    try {
+      await new Promise((resolve, reject) => {
+        removeUser({ username: 'testuser' }, { multi: true }, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+      await new Promise((resolve, reject) => {
+        removeUser({ username: 'testorganiser' }, { multi: true }, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
   });
 
   describe('POST /auth/register', function () {
