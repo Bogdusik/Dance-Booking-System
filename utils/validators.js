@@ -9,7 +9,9 @@ const handleValidationErrors = (req, res, next) => {
   if (!errors.isEmpty()) {
     const firstError = errors.array()[0];
     req.flash('error_msg', firstError.msg);
-    return res.redirect('back');
+    // Use referer or default redirect path
+    const redirectPath = req.get('Referer') || req.originalUrl || '/';
+    return res.redirect(redirectPath);
   }
   next();
 };

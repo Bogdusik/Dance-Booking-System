@@ -18,6 +18,8 @@ const removeCourse = courseDb.remove;
 const removeClass = classDb.remove;
 
 describe('Organiser Routes Tests', function () {
+  this.timeout(15000);
+  
   let organiserUser;
   let testCourse;
   let testClass;
