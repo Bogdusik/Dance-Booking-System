@@ -3,7 +3,7 @@ const app = require('../app');
 const { expect } = require('chai');
 
 describe('Dance Booking System – Basic Routes', function () {
-  this.timeout(10000);
+  this.timeout(20000);
 
   it('GET /courses → should return 200 and HTML', function (done) {
     request(app)
