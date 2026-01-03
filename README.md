@@ -2,6 +2,11 @@
 
 _A user-friendly web platform for booking dance classes, managing courses, and efficiently organizing participants._
 
+[![CI](https://github.com/Bogdusik/Dance-Booking-System/workflows/CI/badge.svg)](https://github.com/Bogdusik/Dance-Booking-System/actions)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-4.18-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 ## 🛠️ Technologies
 
 - **Node.js & Express.js** – Robust backend handling
@@ -58,9 +63,16 @@ _A user-friendly web platform for booking dance classes, managing courses, and e
 
 ## 🚀 Getting Started
 
+### Prerequisites
+- Node.js 18.x or higher
+- npm or yarn
+
+### Installation
+
 **Step 1: Clone the repository**
 ```bash
 git clone https://github.com/Bogdusik/Dance-Booking-System.git
+cd Dance-Booking-System
 ```
 
 **Step 2: Install dependencies**
@@ -68,36 +80,140 @@ git clone https://github.com/Bogdusik/Dance-Booking-System.git
 npm install
 ```
 
-**Step 3: Run the application**
+**Step 3: Configure environment variables**
 ```bash
-npm start or npm run dev 
+cp .env.example .env
+# Edit .env file with your configuration
+```
+
+**Step 4: Run the application**
+```bash
+# Development mode (with auto-reload)
+npm run dev
+
+# Production mode
+npm start
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
+### 🐳 Running with Docker
 
-## 🧪 Automated Testing
+**Using Docker Compose (Recommended):**
+```bash
+docker-compose up -d
+```
 
-This project includes **10 automated tests** to validate routing, access control, form validation, and error handling.
+**Using Docker:**
+```bash
+docker build -t dance-booking-system .
+docker run -p 3000:3000 -v $(pwd)/db:/app/db dance-booking-system
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000)
+
+
+## 🧪 Testing
+
+This project includes **automated tests** to validate routing, access control, form validation, and error handling.
 
 - ✅ Tested with: `Mocha`, `Chai`, `Supertest`
-- 📂 Tests located in: `tests/app.test.js`
+- 📂 Tests located in: `tests/` directory
 - 📄 Summary available in: [`test_report.md`](./test_report.md)
 
-**Run tests with:**
+**Run tests:**
 ```bash
 npm test
 ```
+
+**Run tests in watch mode:**
+```bash
+npm test -- --watch
+```
+
+## 🏗️ Project Structure
+
+```
+Dance-Booking-System/
+├── app.js                 # Main application entry point
+├── controllers/           # Request handlers
+│   ├── authController.js
+│   ├── courseController.js
+│   └── organiserController.js
+├── models/                # Data models
+│   ├── userModel.js
+│   ├── courseModel.js
+│   ├── classModel.js
+│   └── enrolmentModel.js
+├── routes/                # Route definitions
+│   ├── index.js
+│   ├── auth.js
+│   └── organiser.js
+├── middlewares/           # Custom middleware
+│   └── authMiddleware.js
+├── views/                 # Mustache templates
+├── public/                # Static assets
+├── db/                    # NeDB database files
+├── tests/                 # Test files
+├── utils/                 # Utility functions
+├── Dockerfile             # Docker configuration
+├── docker-compose.yml     # Docker Compose configuration
+└── .github/workflows/     # CI/CD workflows
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+PORT=3000
+NODE_ENV=development
+SESSION_SECRET=your-secret-key-change-this-in-production
+```
+
+See `.env.example` for reference.
+
+## 🚀 Deployment
+
+### Using Docker
+```bash
+docker-compose up -d
+```
+
+### Manual Deployment
+1. Set `NODE_ENV=production`
+2. Update `SESSION_SECRET` with a strong secret
+3. Run `npm start`
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.
 
 ## 🚧 Upcoming Features
 - 💳 **Payment integration** (Stripe)
 - 📧 **Notifications & reminders**
 - 🎨 **Enhanced UI/UX**
 - 🌟 **User feedback and rating system**
+- 📊 **Advanced analytics dashboard**
+- 🔄 **TypeScript migration**
 
 ## 📫 Contact
 
 **Bogdan Bozhenko**
 - [GitHub](https://github.com/Bogdusik)
+- [Portfolio](https://personal-website-bogdusik.vercel.app/)
+- [LinkedIn](https://www.linkedin.com/in/bohdan-bozhenko)
 
 ⭐ **Please feel free to contribute, submit issues or suggest features!** ⭐
