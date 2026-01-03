@@ -7,29 +7,29 @@ const util = require('util');
 
 const findUser = util.promisify(userDb.findOne).bind(userDb);
 const insertUser = util.promisify(userDb.insert).bind(userDb);
-const removeUser = userDb.remove;
+const removeUserPromise = userDb.remove;
 
 describe('Authentication Tests', function () {
   this.timeout(20000);
 
-  beforeEach(function (done) {
-    // Clean up test users - use callback style with error handling
-    removeUser({ username: 'testuser' }, { multi: true }, (err1) => {
-      removeUser({ username: 'testorganiser' }, { multi: true }, (err2) => {
-        // Ignore errors and continue
-        done();
-      });
-    });
+  beforeEach(async function () {
+    // Clean up test users - use Promise style
+    try {
+      await removeUserPromise({ username: 'testuser' }, { multi: true });
+      await removeUserPromise({ username: 'testorganiser' }, { multi: true });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
   });
 
-  afterEach(function (done) {
+  afterEach(async function () {
     // Clean up after tests
-    removeUser({ username: 'testuser' }, { multi: true }, (err1) => {
-      removeUser({ username: 'testorganiser' }, { multi: true }, (err2) => {
-        // Ignore errors and continue
-        done();
-      });
-    });
+    try {
+      await removeUserPromise({ username: 'testuser' }, { multi: true });
+      await removeUserPromise({ username: 'testorganiser' }, { multi: true });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
   });
 
   describe('POST /auth/register', function () {
@@ -86,22 +86,23 @@ describe('Authentication Tests', function () {
         .end(done);
     });
 
-    it('should reject duplicate username', async function () {
-      // Create user first
-      const hash = await bcrypt.hash('password123', 10);
-      await insertUser({ username: 'testuser', password: hash, role: 'user' });
-
-      // Try to register same username
-      await request(app)
-        .post('/auth/register')
-        .type('form')
-        .send({
-          username: 'testuser',
-          password: 'password123',
-          role: 'user'
-        })
-        .expect(302)
-        .expect('Location', '/auth/register');
+    it('should reject duplicate username', function (done) {
+      // Create user first, then try to register same username
+      bcrypt.hash('password123', 10).then(hash => {
+        return insertUser({ username: 'testuser', password: hash, role: 'user' });
+      }).then(() => {
+        return request(app)
+          .post('/auth/register')
+          .type('form')
+          .send({
+            username: 'testuser',
+            password: 'password123',
+            role: 'user'
+          })
+          .expect(302)
+          .expect('Location', '/auth/register');
+      }).then(() => done())
+        .catch(done);
     });
   });
 
