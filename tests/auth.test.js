@@ -171,10 +171,10 @@ describe('Authentication Tests', function () {
     });
   });
 
-  describe('POST /auth/logout', function () {
+  describe('GET /auth/logout', function () {
     it('should logout successfully', function (done) {
       request(app)
-        .post('/auth/logout')
+        .get('/auth/logout')
         .expect(302)
         .expect('Location', '/')
         .end(done);
