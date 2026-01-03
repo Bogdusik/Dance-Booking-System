@@ -13,9 +13,10 @@ describe('Authentication Tests', function () {
   this.timeout(20000);
 
   beforeEach(function (done) {
-    // Clean up test users - use callback style for better timeout handling
-    removeUser({ username: 'testuser' }, { multi: true }, () => {
-      removeUser({ username: 'testorganiser' }, { multi: true }, () => {
+    // Clean up test users - use callback style with error handling
+    removeUser({ username: 'testuser' }, { multi: true }, (err1) => {
+      removeUser({ username: 'testorganiser' }, { multi: true }, (err2) => {
+        // Ignore errors and continue
         done();
       });
     });
@@ -23,8 +24,9 @@ describe('Authentication Tests', function () {
 
   afterEach(function (done) {
     // Clean up after tests
-    removeUser({ username: 'testuser' }, { multi: true }, () => {
-      removeUser({ username: 'testorganiser' }, { multi: true }, () => {
+    removeUser({ username: 'testuser' }, { multi: true }, (err1) => {
+      removeUser({ username: 'testorganiser' }, { multi: true }, (err2) => {
+        // Ignore errors and continue
         done();
       });
     });
