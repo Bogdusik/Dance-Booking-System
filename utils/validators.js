@@ -9,8 +9,18 @@ const handleValidationErrors = (req, res, next) => {
   if (!errors.isEmpty()) {
     const firstError = errors.array()[0];
     req.flash('error_msg', firstError.msg);
-    // Use referer or default redirect path
-    const redirectPath = req.get('Referer') || req.originalUrl || '/';
+    // Determine redirect path based on route
+    let redirectPath = '/';
+    const url = req.originalUrl || req.url;
+    if (url.includes('/organiser/course/add') || url.includes('/course/add')) {
+      redirectPath = '/organiser/dashboard';
+    } else if (url.includes('/organiser/class/add') || url.includes('/class/add')) {
+      redirectPath = '/organiser/dashboard';
+    } else if (url.startsWith('/auth')) {
+      redirectPath = url;
+    } else if (req.get('Referer')) {
+      redirectPath = req.get('Referer');
+    }
     return res.redirect(redirectPath);
   }
   next();
