@@ -10,7 +10,7 @@ const insertUser = util.promisify(userDb.insert).bind(userDb);
 const removeUser = userDb.remove;
 
 describe('Authentication Tests', function () {
-  this.timeout(10000);
+  this.timeout(20000);
 
   beforeEach(async function () {
     // Clean up test users

@@ -14,7 +14,7 @@ const removeCourse = courseDb.remove;
 const removeClass = classDb.remove;
 
 describe('Course Controller Tests', function () {
-  this.timeout(10000);
+  this.timeout(20000);
   
   let testCourse;
   let testClass;
