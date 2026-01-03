@@ -1,35 +1,38 @@
 const express = require('express');
 const router = express.Router();
+const util = require('util');
 const organiserController = require('../controllers/organiserController');
 const { isAuthenticated, isOrganiser } = require('../middlewares/authMiddleware');
+const { validateCourse, validateClass, validateIdParam } = require('../utils/validators');
+const { asyncHandler } = require('../middlewares/errorHandler');
+const logger = require('../utils/logger');
 
-const courseDb = require('../models/courseModel');
 const classDb = require('../models/classModel');
+const removeClass = classDb.remove;
 
 router.get('/dashboard', isAuthenticated, isOrganiser, organiserController.dashboard);
 
 router.post(
-  '/add-course',
+  '/course/add',
   isAuthenticated,
   isOrganiser,
-  organiserController.validateCourse,
+  validateCourse,
   organiserController.addCourse
 );
 
 router.post(
-  '/delete-course/:id',
+  '/course/delete/:id',
   isAuthenticated,
   isOrganiser,
-  (req, res) => {
-    courseDb.remove({ _id: req.params.id }, {}, () => res.redirect('/organiser/dashboard'));
-  }
+  validateIdParam,
+  organiserController.deleteCourse
 );
 
 router.post(
-  '/add-class',
+  '/class/add',
   isAuthenticated,
   isOrganiser,
-  organiserController.validateClass,
+  validateClass,
   organiserController.addClass
 );
 
@@ -44,7 +47,8 @@ router.post(
   '/edit-class/:id',
   isAuthenticated,
   isOrganiser,
-  organiserController.validateClass,
+  validateIdParam,
+  validateClass,
   organiserController.updateClass
 );
 
@@ -52,9 +56,18 @@ router.post(
   '/delete-class/:id',
   isAuthenticated,
   isOrganiser,
-  (req, res) => {
-    classDb.remove({ _id: req.params.id }, {}, () => res.redirect('/organiser/dashboard'));
-  }
+  validateIdParam,
+  asyncHandler(async (req, res) => {
+    await new Promise((resolve, reject) => {
+      removeClass({ _id: req.params.id }, {}, (err, numRemoved) => {
+        if (err) reject(err);
+        else resolve(numRemoved);
+      });
+    });
+    logger.info('Class deleted', { classId: req.params.id });
+    req.flash('success_msg', 'Class deleted successfully.');
+    res.redirect('/organiser/dashboard');
+  })
 );
 
 router.get(
