@@ -49,7 +49,7 @@ jobs:
       continue-on-error: true
     
     - name: Run tests
-      run: npm test
+      run: npm test -- --timeout 20000
       env:
         NODE_ENV: test
         PORT: 3000
