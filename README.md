@@ -136,4 +136,4 @@ Dance-Booking-System/
 - **Security Best Practices**: Implemented security middleware (Helmet, CSRF protection), input validation, and secure session management
 - **Testing Strategies**: Wrote comprehensive integration tests for authentication flows, route protection, and business logic validation
 
-Fork it, use it, improve it — open to PRs!
+Fork it, use it, improve it - open to PRs!
