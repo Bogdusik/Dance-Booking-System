@@ -2,13 +2,6 @@
 
 A Node.js-based web platform for booking dance classes with role-based access control, session scheduling, and enrollment tracking. Features comprehensive admin management, organiser tools, and a user-friendly interface built with Express.js and Mustache templating.
 
-## Demo
-
-![Home Page](screenshots/home.png)
-![Courses Overview](screenshots/courses.png)
-![Admin Panel](screenshots/admin.png)
-![Booking Interface](screenshots/booking.png)
-
 ## Why It's Cool
 
 - **Role-Based Access Control**: Three-tier system (Admin, Organiser, User) with secure authentication and authorization middleware
