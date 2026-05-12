@@ -13,7 +13,8 @@ const redirectWithError = (req, res, path, msg) => {
 };
 
 exports.register = asyncHandler(async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password } = req.body;
+  const role = 'user';
 
   try {
     const existingUser = await findUser({ username });

@@ -1,5 +1,7 @@
-const Datastore = require('nedb');
-const db = new Datastore({ filename: './db/classes.db', autoload: true });
+const Datastore = require('@seald-io/nedb');
+const path = require('path');
+const dbFile = process.env.NODE_ENV === 'test' ? 'test-classes.db' : 'classes.db';
+const db = new Datastore({ filename: path.join(__dirname, '../db', dbFile), autoload: true });
 
 const isValidClass = cls =>
   cls?.courseId && cls?.date && cls?.time && cls?.location && cls?.price;

@@ -9,14 +9,14 @@
   <div class="form-container">
     <h1>Admin Panel</h1>
 
-    <form action="/organiser/add-course" method="post">
+    <form action="/organiser/course/add" method="post">
       <input name="name" placeholder="Course Name" required />
       <textarea name="description" placeholder="Course Description"></textarea>
       <input name="duration" placeholder="Duration (e.g., 12 weeks)" required />
       <button type="submit" class="button-primary">Add Course</button>
     </form>
 
-    <form action="/organiser/add-class" method="post">
+    <form action="/organiser/class/add" method="post">
       <label for="courseId">Select Course:</label>
       <select name="courseId" required>
         <option value="">-- Select a Course --</option>
@@ -41,7 +41,7 @@
         <p><strong>Name:</strong> {{name}}</p>
         <p><strong>Description:</strong> {{description}}</p>
         <p><strong>Duration:</strong> {{duration}}</p>
-        <form action="/organiser/delete-course/{{_id}}" method="POST" onsubmit="return confirm('Delete this course?')">
+        <form action="/organiser/course/delete/{{_id}}" method="POST" onsubmit="return confirm('Delete this course?')">
           <button class="button-warning">Delete Course</button>
         </form>
       </div>
