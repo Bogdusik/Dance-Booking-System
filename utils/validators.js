@@ -1,5 +1,6 @@
 const { body, param, validationResult } = require('express-validator');
-const { isValidId } = require('./validation');
+
+const isValidId = id => typeof id === 'string' && id.trim().length > 0;
 
 /**
  * Centralized validation result handler
@@ -46,12 +47,6 @@ const validateRegister = [
     .withMessage('Password must be at least 5 characters')
     .isLength({ max: 100 })
     .withMessage('Password must be less than 100 characters'),
-  
-  body('role')
-    .notEmpty()
-    .withMessage('Role is required')
-    .isIn(['user', 'organiser'])
-    .withMessage('Invalid role selected'),
   
   handleValidationErrors
 ];
@@ -201,9 +196,6 @@ const validateEnrolment = [
   handleValidationErrors
 ];
 
-/**
- * Validation for MongoDB/ObjectId-like IDs in URL parameters
- */
 const validateIdParam = [
   param('id')
     .notEmpty()
@@ -214,7 +206,21 @@ const validateIdParam = [
       }
       return true;
     }),
-  
+
+  handleValidationErrors
+];
+
+const validateClassIdParam = [
+  param('classId')
+    .notEmpty()
+    .withMessage('Class ID is required')
+    .custom((value) => {
+      if (!isValidId(value)) {
+        throw new Error('Invalid class ID format');
+      }
+      return true;
+    }),
+
   handleValidationErrors
 ];
 
@@ -225,6 +231,7 @@ module.exports = {
   validateClass,
   validateEnrolment,
   validateIdParam,
+  validateClassIdParam,
   handleValidationErrors
 };
 

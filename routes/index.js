@@ -23,36 +23,24 @@ router.get('/course/:id', validateIdParam, courseController.getCourseDetail);
 
 router.get('/enrol/:id', validateIdParam, asyncHandler(async (req, res) => {
   const courseId = req.params.id;
-  try {
-    const classes = await findClasses({ courseId });
-    res.render('enrol', { course: { _id: courseId }, classes });
-  } catch (err) {
-    logger.error('Failed to fetch classes for enrolment', { error: err.message, courseId });
-    throw err;
-  }
+  const classes = await findClasses({ courseId });
+  res.render('enrol', { course: { _id: courseId }, classes });
 }));
 
 router.post('/enrol/:id', validateIdParam, validateEnrolment, asyncHandler(async (req, res) => {
   const courseId = req.params.id;
   const { name, email, phone, classId } = req.body;
 
-  try {
-    const existing = await findEnrolment({ classId, email });
-    if (existing) {
-      req.flash('error_msg', 'You are already enrolled in this class.');
-      return res.redirect(`/enrol/${courseId}`);
-    }
-
-    await insertEnrolment({ courseId, classId, name, email, phone });
-    logger.info('User enrolled successfully', { courseId, classId, email });
-    req.flash('success_msg', 'You have successfully enrolled!');
-    res.redirect(`/course/${courseId}`);
-  } catch (err) {
-    logger.error('Enrolment error', { error: err.message, courseId, classId });
-    req.flash('error_msg', 'Failed to enrol. Please try again.');
-    res.redirect(`/enrol/${courseId}`);
-    throw err;
+  const existing = await findEnrolment({ classId, email });
+  if (existing) {
+    req.flash('error_msg', 'You are already enrolled in this class.');
+    return res.redirect(`/enrol/${courseId}`);
   }
+
+  await insertEnrolment({ courseId, classId, name, email, phone });
+  logger.info('User enrolled successfully', { courseId, classId, email });
+  req.flash('success_msg', 'You have successfully enrolled!');
+  res.redirect(`/course/${courseId}`);
 }));
 
 module.exports = router;

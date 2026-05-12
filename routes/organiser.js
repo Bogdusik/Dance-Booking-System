@@ -3,12 +3,12 @@ const router = express.Router();
 const util = require('util');
 const organiserController = require('../controllers/organiserController');
 const { isAuthenticated, isOrganiser } = require('../middlewares/authMiddleware');
-const { validateCourse, validateClass, validateIdParam } = require('../utils/validators');
+const { validateCourse, validateClass, validateIdParam, validateClassIdParam } = require('../utils/validators');
 const { asyncHandler } = require('../middlewares/errorHandler');
 const logger = require('../utils/logger');
 
 const classDb = require('../models/classModel');
-const removeClass = classDb.remove;
+const removeClass = util.promisify(classDb.remove).bind(classDb);
 
 router.get('/dashboard', isAuthenticated, isOrganiser, organiserController.dashboard);
 
@@ -58,12 +58,7 @@ router.post(
   isOrganiser,
   validateIdParam,
   asyncHandler(async (req, res) => {
-    await new Promise((resolve, reject) => {
-      removeClass({ _id: req.params.id }, {}, (err, numRemoved) => {
-        if (err) reject(err);
-        else resolve(numRemoved);
-      });
-    });
+    await removeClass({ _id: req.params.id }, {});
     logger.info('Class deleted', { classId: req.params.id });
     req.flash('success_msg', 'Class deleted successfully.');
     res.redirect('/organiser/dashboard');
@@ -74,6 +69,7 @@ router.get(
   '/participants/:classId',
   isAuthenticated,
   isOrganiser,
+  validateClassIdParam,
   organiserController.listParticipants
 );
 

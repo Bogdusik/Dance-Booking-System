@@ -1,5 +1,7 @@
-const Datastore = require('nedb');
-const db = new Datastore({ filename: './db/users.db', autoload: true });
+const Datastore = require('@seald-io/nedb');
+const path = require('path');
+const dbFile = process.env.NODE_ENV === 'test' ? 'test-users.db' : 'users.db';
+const db = new Datastore({ filename: path.join(__dirname, '../db', dbFile), autoload: true });
 
 const isValidUser = user =>
   user?.username && user?.password && user?.role;
