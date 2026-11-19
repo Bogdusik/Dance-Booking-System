@@ -89,26 +89,13 @@ const validateCourse = [
     .trim()
     .notEmpty()
     .withMessage('Duration is required')
-    .matches(/^\d+\s*(minute|minutes|hour|hours|hr|hrs)$/i)
-    .withMessage('Duration must be in format like "60 minutes" or "1 hour"'),
+    .matches(/^\d+\s*(minute|minutes|min|mins|hour|hours|hr|hrs|day|days|week|weeks|month|months)$/i)
+    .withMessage('Duration must look like "90 minutes", "2 days" or "8 weeks"'),
   
   handleValidationErrors
 ];
 
-/**
- * Validation rules for class creation
- */
-const validateClass = [
-  body('courseId')
-    .notEmpty()
-    .withMessage('Course ID is required')
-    .custom((value) => {
-      if (!isValidId(value)) {
-        throw new Error('Invalid course ID format');
-      }
-      return true;
-    }),
-  
+const classFieldRules = [
   body('date')
     .notEmpty()
     .withMessage('Date is required')
@@ -148,8 +135,32 @@ const validateClass = [
     .optional()
     .trim()
     .isLength({ max: 500 })
-    .withMessage('Description must be less than 500 characters'),
+    .withMessage('Description must be less than 500 characters')
+];
+
+/**
+ * Validation rules for class creation
+ */
+const validateClass = [
+  body('courseId')
+    .notEmpty()
+    .withMessage('Course ID is required')
+    .custom((value) => {
+      if (!isValidId(value)) {
+        throw new Error('Invalid course ID format');
+      }
+      return true;
+    }),
   
+  ...classFieldRules,
+  handleValidationErrors
+];
+
+/**
+ * Validation rules for editing a class (the course cannot change)
+ */
+const validateClassUpdate = [
+  ...classFieldRules,
   handleValidationErrors
 ];
 
@@ -229,6 +240,7 @@ module.exports = {
   validateLogin,
   validateCourse,
   validateClass,
+  validateClassUpdate,
   validateEnrolment,
   validateIdParam,
   validateClassIdParam,

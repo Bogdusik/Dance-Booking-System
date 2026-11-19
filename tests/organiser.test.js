@@ -199,5 +199,51 @@ describe('Organiser Routes Tests', function () {
         .end(done);
     });
   });
+  describe('Regression: course duration and class editing', function () {
+    const findClass = util.promisify(classDb.findOne).bind(classDb);
+
+    beforeEach(async function () {
+      await agent
+        .post('/auth/login')
+        .type('form')
+        .send({ username: 'testorganiser', password: 'password123' });
+    });
+
+    it('accepts a duration in weeks, as the dashboard suggests', async function () {
+      await agent
+        .post('/organiser/course/add')
+        .type('form')
+        .send({ name: 'Weekly Course', description: 'Runs once a week for a term.', duration: '8 weeks' })
+        .expect(302)
+        .expect('Location', '/organiser/dashboard');
+
+      const course = await findCourse({ name: 'Weekly Course' });
+      expect(course).to.exist;
+      expect(course.duration).to.equal('8 weeks');
+      await removeCourse({ _id: course._id }, {});
+    });
+
+    it('updates a class from the edit form, which has no courseId field', async function () {
+      const cls = await insertClass({
+        courseId: testCourse._id,
+        date: '2099-01-10',
+        time: '18:00',
+        location: 'Studio 1',
+        price: 10
+      });
+
+      await agent
+        .post(`/organiser/edit-class/${cls._id}`)
+        .type('form')
+        .send({ date: '2099-01-17', time: '19:30', location: 'Studio 2', price: '12', description: '' })
+        .expect(302)
+        .expect('Location', '/organiser/dashboard');
+
+      const updated = await findClass({ _id: cls._id });
+      expect(updated.location).to.equal('Studio 2');
+      expect(updated.price).to.equal(12);
+      await removeClass({ _id: cls._id }, {});
+    });
+  });
 });
 
