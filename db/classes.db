@@ -1,4 +1,13 @@
-{"courseId":"lseya8wQ8vIPXqh0","date":"2025-04-10","time":"17:00","location":"Room A3, Downtown Training Center","price":"25£","description":" Introduction to Java syntax, variables, and basic logic.","_id":"5NWlb0Qp8KbU49eR"}
-{"courseId":"PdgSGCX6lxxxzbvZ","date":"2025-04-15","time":"19:30","location":"Groove Hall, Street 21","price":"20£","description":"Rhythm drills, bounce, grooves, and beginner choreography.","_id":"PNT6f0eS68KMDLeu"}
-{"courseId":"fYx6jA6u2EIObUzA","date":"2025-04-15","time":"22:00","location":"Blackbox Room, Basement","price":"18","description":"Fundamentals of flow transitions and musical breaks.","_id":"mSBmID2O1HQlGP70"}
-{"courseId":"c4QGys7FRGRMVtLM","date":"2025-05-12","time":"18:30","location":" Latin Motion Studio, 3rd Avenue 22","price":"30£","description":"Body coordination, footwork combinations, musical interpretation.","_id":"y1rEwmByQtIBDqvG"}
+{"courseId":"GTscfyFsfFgJGZkr","description":"","date":"2027-01-13","time":"18:30","location":"Mirror Room, Riverside Arts Centre","price":14,"_id":"42bzQd1EKM3fRO8B"}
+{"courseId":"rtXTvyWGkpjfEIHO","description":"","date":"2027-01-14","time":"18:00","location":"Studio 1, The Granary","price":12,"_id":"6o5H699DGqNLG19I"}
+{"courseId":"DpUDAoTk6HLXC0Ws","description":"","date":"2027-01-15","time":"20:00","location":"Studio 2, The Granary","price":13.5,"_id":"HWA2MNIEHQKEwMCF"}
+{"courseId":"D7ZNJgwkeZlMijha","description":"","date":"2027-02-22","time":"17:30","location":"Main Hall, Northgate Community Centre","price":10,"_id":"KMcM005BXm9HLNgs"}
+{"courseId":"Dj761l3oGQo7pNdy","description":"","date":"2027-03-13","time":"10:00","location":"Mirror Room, Riverside Arts Centre","price":65,"_id":"LFR4GmiIBsIH2hWt"}
+{"courseId":"Nk4YmQ003vjKHKHk","description":"","date":"2027-02-13","time":"19:30","location":"Main Hall, Northgate Community Centre","price":9,"_id":"OOfw3Ex4g6aSiH3X"}
+{"courseId":"rtXTvyWGkpjfEIHO","description":"","date":"2027-03-09","time":"19:00","location":"Studio 1, The Granary","price":12,"_id":"PIEnlSD0qP12ulgn"}
+{"courseId":"rtXTvyWGkpjfEIHO","description":"","date":"2027-01-12","time":"19:00","location":"Studio 1, The Granary","price":12,"_id":"fV3i8dduV7X2pi9w"}
+{"courseId":"DpUDAoTk6HLXC0Ws","description":"","date":"2027-03-26","time":"20:00","location":"Studio 2, The Granary","price":13.5,"_id":"hbSDl7jBdKcv4kvg"}
+{"courseId":"Dj761l3oGQo7pNdy","description":"","date":"2027-01-23","time":"10:00","location":"Mirror Room, Riverside Arts Centre","price":65,"_id":"lXoIJPuetK2cAZ0T"}
+{"courseId":"GTscfyFsfFgJGZkr","description":"","date":"2027-02-24","time":"18:30","location":"Mirror Room, Riverside Arts Centre","price":14,"_id":"pVZX0SxCJWjIGkSM"}
+{"courseId":"Nk4YmQ003vjKHKHk","description":"","date":"2027-01-16","time":"19:30","location":"Main Hall, Northgate Community Centre","price":9,"_id":"v3OJJYNk1qfvXNjp"}
+{"courseId":"D7ZNJgwkeZlMijha","description":"","date":"2027-01-11","time":"17:30","location":"Main Hall, Northgate Community Centre","price":10,"_id":"vu0QQ2b7AkZXsaKx"}

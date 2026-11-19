@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "npx kill-port 3000 && nodemon app.js",
+    "seed": "node scripts/seed.js",
     "test": "mocha --require tests/setup.js tests/**/*.test.js --timeout 20000",
     "test:watch": "mocha --require tests/setup.js tests/**/*.test.js --watch --timeout 10000",
     "test:coverage": "nyc mocha --require tests/setup.js tests/**/*.test.js --timeout 10000"
