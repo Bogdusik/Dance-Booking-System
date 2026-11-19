@@ -1,53 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Course Details</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>{{course.name}} · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="card-container">
-    {{#success_msg}}
-      <div class="flash-success">{{success_msg}}</div>
-    {{/success_msg}}
+  {{> partials/nav}}
 
-    <h1>{{course.name}}</h1>
-    <p>{{course.description}}</p>
+  <main class="wrap">
+    <a href="/courses" class="back-link">← All courses</a>
 
-    <h2>Class Schedule</h2>
-    {{#classes}}
-      <div class="card">
-        <p><strong>Date:</strong> {{date}}, <strong>Time:</strong> {{time}}</p>
-        <p><strong>Location:</strong> {{location}}, <strong>Price:</strong> £{{price}}</p>
+    <section class="detail-hero accent-{{course.accent}}{{^course.accent}}1{{/course.accent}}">
+      <h1 class="page-title">{{course.name}}</h1>
+      <p>{{course.description}}</p>
+      <div class="pills">
+        <span class="pill">{{course.duration}}</span>
+        {{#course.classLabel}}<span class="pill">{{course.classLabel}}</span>{{/course.classLabel}}
+        <span class="pill">{{participantCount}} enrolled</span>
       </div>
-    {{/classes}}
+    </section>
 
-    <h2>Participants</h2>
-    {{#participants.length}}
-      <ul>
-        {{#participants}}
-          <li>
-            {{name}}
-            {{#email}} — {{email}}{{/email}}
-            {{#phone}} — {{phone}}{{/phone}}
-          </li>
-        {{/participants}}
-      </ul>
-    {{/participants.length}}
+    <div class="detail">
+      <div>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Class schedule</h2>
+            <span class="count">{{classes.length}} sessions</span>
+          </div>
+          <div class="session-list">
+            {{#classes}}
+              <div class="session">
+                <span class="date-chip"><span class="m">{{month}}</span><span class="d">{{day}}</span></span>
+                <div class="session-info">
+                  <span class="session-title">{{weekday}} at {{time}}</span>
+                  <span class="session-sub">{{location}}</span>
+                </div>
+                <div class="session-side">
+                  <span class="session-price">{{priceLabel}}</span>
+                  <a href="/enrol/{{courseId}}?class={{_id}}" class="btn btn-ghost btn-sm">Book</a>
+                </div>
+              </div>
+            {{/classes}}
+          </div>
+          {{^classes}}<p class="empty">No sessions scheduled yet.</p>{{/classes}}
+        </section>
 
-    {{^participants.length}}
-      <p>No participants enrolled yet.</p>
-    {{/participants.length}}
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Who's coming</h2>
+            <span class="count">{{participantCount}} dancers</span>
+          </div>
+          {{#hasParticipants}}
+            {{#isOrganiser}}
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+                  <tbody>
+                    {{#participants}}
+                      <tr>
+                        <td><span class="cell-person"><span class="avatar">{{initials}}</span>{{name}}</span></td>
+                        <td class="muted">{{email}}</td>
+                        <td class="muted">{{phone}}</td>
+                      </tr>
+                    {{/participants}}
+                  </tbody>
+                </table>
+              </div>
+            {{/isOrganiser}}
+            {{^isOrganiser}}
+              <div class="people">
+                {{#participants}}<span class="person"><span class="avatar">{{initials}}</span>{{name}}</span>{{/participants}}
+              </div>
+            {{/isOrganiser}}
+          {{/hasParticipants}}
+          {{^hasParticipants}}<p class="empty">No one has enrolled yet. Be the first.</p>{{/hasParticipants}}
+        </section>
+      </div>
 
-    <a href="/courses" class="button-warning">Go Back</a>
-    <a href="/enrol/{{course._id}}" class="button-primary">Enroll</a>
-  </div>
+      <aside class="panel book-card sticky">
+        <h2>Save your place</h2>
+        <p>Choose a session and leave your contact details. No account needed.</p>
+        <ul class="book-facts">
+          <li><span>Duration</span><strong>{{course.duration}}</strong></li>
+          {{#course.nextLabel}}<li><span>Next session</span><strong>{{course.nextLabel}}</strong></li>{{/course.nextLabel}}
+          {{#course.fromPrice}}<li><span>Price</span><strong>from {{course.fromPrice}}</strong></li>{{/course.fromPrice}}
+        </ul>
+        <a href="/enrol/{{course._id}}" class="btn btn-primary btn-block">Enrol now</a>
+      </aside>
+    </div>
+  </main>
 
-  <script>
-    const flash = document.querySelector('.flash-success');
-    if (flash) {
-      setTimeout(() => flash.style.display = 'none', 3000);
-    }
-  </script>
+  {{> partials/foot}}
 </body>
 </html>

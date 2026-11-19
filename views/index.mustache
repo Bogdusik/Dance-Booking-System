@@ -1,70 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dance Booking | Home</title>
-  <link rel="stylesheet" href="/css/style.css"/>
-  <style>
-    .button-group {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 20px;
-    }
-  </style>
+  <title>Dance Booking · Community dance classes</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="form-container">
-    {{#success_msg}}
-      <div class="flash-success">{{success_msg}}</div>
-    {{/success_msg}}
+  {{> partials/nav}}
 
-    <h1 style="text-align: center;">Welcome to Dance Booking</h1>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Community dance classes</span>
+        <h1 class="hero-title">Find your <em>rhythm</em>,<br />book your spot.</h1>
+        <p class="hero-lead">
+          Weekend workshops and 12-week blocks for every level of fitness and ability.
+          Pick a course, choose a session that fits your week and you are on the list.
+        </p>
 
-    <section class="info-section" style="text-align: justify;">
-      <p>
-        We offer a variety of dance courses for all levels of fitness and ability. Our sessions range 
-        from weekend workshops with intensive training to 12-week blocks of weekly classes. With 
-        around five sets of classes running concurrently and special events held throughout the year, 
-        our mission is to bring dance to everyone in the community.
-      </p>
+        <div class="hero-actions">
+          <a href="/courses" class="btn btn-primary">Browse courses</a>
+          {{^user}}<a href="/auth/register" class="btn btn-ghost">Create an account</a>{{/user}}
+          {{#isOrganiser}}<a href="/organiser/dashboard" class="btn btn-ghost">Open dashboard</a>{{/isOrganiser}}
+        </div>
+
+        <div class="hero-stats">
+          <div><strong>{{stats.courses}}</strong><span>courses</span></div>
+          <div><strong>{{stats.classes}}</strong><span>sessions</span></div>
+          <div><strong>All</strong><span>levels welcome</span></div>
+        </div>
+      </div>
+
+      <aside class="up-next" aria-label="Upcoming sessions">
+        <div class="up-next-head">
+          <h2>Coming up</h2>
+          <span class="live-dot">Booking open</span>
+        </div>
+        <div class="session-list">
+          {{#upcoming}}
+            <a class="session" href="/course/{{courseId}}">
+              <span class="date-chip"><span class="m">{{month}}</span><span class="d">{{day}}</span></span>
+              <span class="session-info">
+                <span class="session-title">{{courseName}}</span>
+                <span class="session-sub">{{weekday}} · {{time}} · {{location}}</span>
+              </span>
+              <span class="session-price">{{priceLabel}}</span>
+            </a>
+          {{/upcoming}}
+          {{^upcoming}}<p class="empty">No sessions scheduled yet.</p>{{/upcoming}}
+        </div>
+      </aside>
     </section>
 
-    {{#user}}
-      <p style="text-align: center;">
-        Logged in as <strong>{{user.username}}</strong> ({{user.role}})
-      </p>
-
-      <div class="button-group">
-        <a href="/courses" class="button-secondary">View Courses</a>
-
-        {{#isOrganiser}}
-          <a href="/organiser/dashboard" class="button-warning">Admin Panel</a>
-          <a href="/organiser/class-list" class="button-warning">All Participants</a>
-          <a href="/organiser/users" class="button-warning">Manage Users</a>
-        {{/isOrganiser}}
-
-        <form action="/auth/logout" method="get">
-          <button class="button-warning">Logout</button>
-        </form>
+    {{#featured.length}}
+    <section class="section">
+      <div class="page-head">
+        <div>
+          <span class="eyebrow">Popular right now</span>
+          <h2 class="page-title">Start with these</h2>
+        </div>
+        <a href="/courses" class="btn btn-ghost btn-sm">All courses →</a>
       </div>
-    {{/user}}
-
-    {{^user}}
-      <div class="button-group">
-        <a href="/courses" class="button-secondary">View Courses</a>
-        <a href="/auth/login" class="button-primary">Login</a>
-        <a href="/auth/register" class="button-secondary">Register</a>
+      <div class="course-grid">
+        {{#featured}}{{> partials/course_card}}{{/featured}}
       </div>
-    {{/user}}
-  </div>
+    </section>
+    {{/featured.length}}
+  </main>
 
-  <script>
-    const flash = document.querySelector('.flash-success');
-    if (flash) {
-      setTimeout(() => flash.style.display = 'none', 3000);
-    }
-  </script>
+  {{> partials/foot}}
 </body>
 </html>

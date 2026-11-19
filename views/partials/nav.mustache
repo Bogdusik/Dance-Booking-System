@@ -1,0 +1,39 @@
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="/" class="brand" aria-label="Dance Booking home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </span>
+      <span>Dance<span class="brand-soft">Booking</span></span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main">
+      <a href="/courses" class="{{#nav.courses}}is-active{{/nav.courses}}">Courses</a>
+      {{#isOrganiser}}
+        <a href="/organiser/dashboard" class="{{#nav.dashboard}}is-active{{/nav.dashboard}}">Dashboard</a>
+        <a href="/organiser/class-list" class="{{#nav.classList}}is-active{{/nav.classList}}">Participants</a>
+        <a href="/organiser/users" class="{{#nav.users}}is-active{{/nav.users}}">Users</a>
+      {{/isOrganiser}}
+    </nav>
+
+    <div class="nav-actions">
+      {{#user}}
+        <span class="user-chip">
+          <span class="avatar" aria-hidden="true">{{userInitials}}</span>
+          <span class="user-name">{{username}}</span>
+          <span class="badge {{#isOrganiser}}badge-accent{{/isOrganiser}}">{{role}}</span>
+        </span>
+        <a href="/auth/logout" class="btn btn-ghost btn-sm">Log out</a>
+      {{/user}}
+      {{^user}}
+        <a href="/auth/login" class="btn btn-ghost btn-sm">Log in</a>
+        <a href="/auth/register" class="btn btn-primary btn-sm">Sign up</a>
+      {{/user}}
+    </div>
+  </div>
+</header>
+
+<div class="wrap flash-stack">
+  {{#error_msg}}<div class="flash flash-error" role="alert">{{.}}</div>{{/error_msg}}
+  {{#success_msg}}<div class="flash flash-success" role="status">{{.}}</div>{{/success_msg}}
+</div>

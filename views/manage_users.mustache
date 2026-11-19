@@ -1,54 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Manage Users</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>Users · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="form-container">
-    <h1>All Users</h1>
+  {{> partials/nav}}
 
-    <!-- ✅ Flash-сообщения -->
-    {{#success_msg}}
-      <p class="flash-success">{{.}}</p>
-    {{/success_msg}}
-
-    {{#error_msg}}
-      <p class="flash-error">{{.}}</p>
-    {{/error_msg}}
-
-    <h2>Organisers</h2>
-    {{#organisers}}
-      <div class="card">
-        <p><strong>Username:</strong> {{username}}</p>
-        <p><strong>Role:</strong> organiser</p>
-
-        {{^isSelf}}
-          <form action="/organiser/delete-user/{{_id}}" method="POST" onsubmit="return confirm('Delete this organiser?')">
-            <button class="button-warning">Delete Organiser</button>
-          </form>
-        {{/isSelf}}
+  <main class="wrap">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Organiser</span>
+        <h1 class="page-title">Accounts</h1>
       </div>
-    {{/organisers}}
+    </div>
 
-    <h2>Users</h2>
-    {{#users}}
-      <div class="card">
-        <p><strong>Username:</strong> {{username}}</p>
-        <p><strong>Role:</strong> user</p>
-
-        <form action="/organiser/delete-user/{{_id}}" method="POST" onsubmit="return confirm('Delete this user?')">
-          <button class="button-warning">Delete User</button>
-        </form>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Organisers</h2>
+        <span class="count">{{organisers.length}}</span>
       </div>
-    {{/users}}
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            {{#organisers}}
+              <tr>
+                <td><span class="cell-person"><span class="avatar">{{initials}}</span>{{username}}</span></td>
+                <td><span class="badge badge-accent">organiser</span></td>
+                <td>
+                  <div class="row-actions">
+                    {{#isSelf}}<span class="muted">You</span>{{/isSelf}}
+                    {{^isSelf}}
+                      <form action="/organiser/delete-user/{{_id}}" method="post" data-confirm="Delete this organiser?">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                    {{/isSelf}}
+                  </div>
+                </td>
+              </tr>
+            {{/organisers}}
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-    {{^users}}
-      <p>No users registered.</p>
-    {{/users}}
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Members</h2>
+        <span class="count">{{users.length}}</span>
+      </div>
+      {{#hasUsers}}
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              {{#users}}
+                <tr>
+                  <td><span class="cell-person"><span class="avatar">{{initials}}</span>{{username}}</span></td>
+                  <td><span class="badge">member</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <form action="/organiser/delete-user/{{_id}}" method="post" data-confirm="Delete this user?">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {{/users}}
+            </tbody>
+          </table>
+        </div>
+      {{/hasUsers}}
+      {{^hasUsers}}<p class="empty">No members registered yet.</p>{{/hasUsers}}
+    </section>
+  </main>
 
-    <a href="/" class="button-secondary">Back to Home</a>
-  </div>
+  {{> partials/foot}}
 </body>
 </html>

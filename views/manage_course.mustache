@@ -1,32 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Manage Course</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>Session participants · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="card-container">
-    <h1>Participants for {{courseName}}</h1>
+  {{> partials/nav}}
 
-    <p>
-      <strong>Date:</strong> {{cls.date}}, 
-      <strong>Time:</strong> {{cls.time}}, 
-      <strong>Location:</strong> {{cls.location}}, 
-      <strong>Duration:</strong> {{duration}}
-    </p>
+  <main class="wrap">
+    <a href="/organiser/dashboard" class="back-link">← Dashboard</a>
 
-    <div class="card">
-      {{#cls.participants}}
-        <p>{{name}} — {{email}}</p>
-      {{/cls.participants}}
+    <section class="panel class-block">
+      <div class="session">
+        <span class="date-chip"><span class="m">{{cls.month}}</span><span class="d">{{cls.day}}</span></span>
+        <div class="session-info">
+          <h1 class="session-title">{{courseName}}</h1>
+          <span class="session-sub">{{cls.dateLabel}} at {{cls.time}} · {{cls.location}} · {{duration}}</span>
+        </div>
+        <div class="session-side"><span class="session-price">{{cls.priceLabel}}</span></div>
+      </div>
 
-      {{^cls.participants}}
-        <p>No participants yet.</p>
-      {{/cls.participants}}
-    </div>
+      {{#hasParticipants}}
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+            <tbody>
+              {{#cls.participants}}
+                <tr>
+                  <td><span class="cell-person"><span class="avatar">{{initials}}</span>{{name}}</span></td>
+                  <td class="muted">{{email}}</td>
+                  <td class="muted">{{phone}}</td>
+                </tr>
+              {{/cls.participants}}
+            </tbody>
+          </table>
+        </div>
+      {{/hasParticipants}}
+      {{^hasParticipants}}<p class="empty">No participants yet.</p>{{/hasParticipants}}
+    </section>
+  </main>
 
-    <a href="/organiser/dashboard" class="button-secondary">Back to Dashboard</a>
-  </div>
+  {{> partials/foot}}
 </body>
 </html>

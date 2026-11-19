@@ -1,68 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>Dashboard · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="form-container">
-    <h1>Admin Panel</h1>
+  {{> partials/nav}}
 
-    <form action="/organiser/course/add" method="post">
-      <input name="name" placeholder="Course Name" required />
-      <textarea name="description" placeholder="Course Description"></textarea>
-      <input name="duration" placeholder="Duration (e.g., 12 weeks)" required />
-      <button type="submit" class="button-primary">Add Course</button>
-    </form>
+  <main class="wrap">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Organiser</span>
+        <h1 class="page-title">Studio dashboard</h1>
+      </div>
+      <a href="/organiser/class-list" class="btn btn-ghost btn-sm">All participants →</a>
+    </div>
 
-    <form action="/organiser/class/add" method="post">
-      <label for="courseId">Select Course:</label>
-      <select name="courseId" required>
-        <option value="">-- Select a Course --</option>
-        {{#courses}}
-          <option value="{{_id}}">{{name}}</option>
-        {{/courses}}
-      </select>
+    <div class="stat-row">
+      <div class="stat"><strong>{{stats.courses}}</strong><span>courses</span></div>
+      <div class="stat"><strong>{{stats.classes}}</strong><span>sessions scheduled</span></div>
+      <div class="stat"><strong>{{stats.enrolments}}</strong><span>enrolments</span></div>
+    </div>
 
-      <input name="date" placeholder="Class Date" required />
-      <input name="time" placeholder="Time" required />
-      <input name="location" placeholder="Location" required />
-      <input name="price" placeholder="Price" required />
-      <textarea name="description" placeholder="Class Description"></textarea>
+    <div class="dash">
+      <div>
+        <form action="/organiser/course/add" method="post" class="panel form-grid">
+          <h2 class="section-title">New course</h2>
+          <div class="field">
+            <label for="course-name">Name</label>
+            <input id="course-name" name="name" placeholder="Salsa Foundations" required />
+          </div>
+          <div class="field">
+            <label for="course-description">Description</label>
+            <textarea id="course-description" name="description" placeholder="What dancers will learn" minlength="10" required></textarea>
+          </div>
+          <div class="field">
+            <label for="course-duration">Duration</label>
+            <input id="course-duration" name="duration" placeholder="8 weeks" required />
+            <span class="hint">For example "90 minutes", "2 days" or "8 weeks"</span>
+          </div>
+          <button type="submit" class="btn btn-primary">Add course</button>
+        </form>
 
-      <button type="submit" class="button-secondary">Add Class</button>
-      <a href="/" class="button-warning">Go to HomePage</a>
-    </form>
-
-    <h2>Existing Courses</h2>
-    {{#courses}}
-      <div class="card">
-        <p><strong>Name:</strong> {{name}}</p>
-        <p><strong>Description:</strong> {{description}}</p>
-        <p><strong>Duration:</strong> {{duration}}</p>
-        <form action="/organiser/course/delete/{{_id}}" method="POST" onsubmit="return confirm('Delete this course?')">
-          <button class="button-warning">Delete Course</button>
+        <form action="/organiser/class/add" method="post" class="panel form-grid">
+          <h2 class="section-title">New session</h2>
+          <div class="field">
+            <label for="class-course">Course</label>
+            <select id="class-course" name="courseId" required>
+              <option value="">Select a course</option>
+              {{#courses}}<option value="{{_id}}">{{name}}</option>{{/courses}}
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="class-date">Date</label>
+              <input id="class-date" type="date" name="date" required />
+            </div>
+            <div class="field">
+              <label for="class-time">Time</label>
+              <input id="class-time" type="time" name="time" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="class-location">Location</label>
+              <input id="class-location" name="location" placeholder="Studio 1" required />
+            </div>
+            <div class="field">
+              <label for="class-price">Price (£)</label>
+              <input id="class-price" type="number" name="price" min="0" step="0.5" placeholder="12" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="class-description">Notes</label>
+            <textarea id="class-description" name="description" placeholder="Optional"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Add session</button>
         </form>
       </div>
-    {{/courses}}
 
-    <h2>Existing Classes</h2>
-    {{#classes}}
-      <div class="card">
-        <p><strong>Course ID:</strong> {{courseId}}</p>
-        <p><strong>Date:</strong> {{date}}</p>
-        <p><strong>Time:</strong> {{time}}</p>
-        <p><strong>Location:</strong> {{location}}</p>
+      <div>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Sessions</h2>
+            <span class="count">{{stats.classes}} total</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>When</th><th>Course &amp; venue</th><th>Price</th><th>Booked</th><th></th></tr></thead>
+              <tbody>
+                {{#classes}}
+                  <tr>
+                    <td class="nowrap"><strong>{{dateLabel}}</strong><br /><span class="muted">{{time}}</span></td>
+                    <td>{{courseName}}<br /><span class="muted">{{location}}</span></td>
+                    <td class="nowrap">{{priceLabel}}</td>
+                    <td class="nowrap"><a href="/organiser/participants/{{_id}}" class="count-link">{{enrolled}} booked</a></td>
+                    <td>
+                      <div class="row-actions">
+                        <a href="/organiser/edit-class/{{_id}}" class="btn btn-ghost btn-sm">Edit</a>
+                        <form action="/organiser/delete-class/{{_id}}" method="post" data-confirm="Delete this session?">
+                          <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                {{/classes}}
+              </tbody>
+            </table>
+          </div>
+          {{^classes}}<p class="empty">No sessions yet. Add one on the left.</p>{{/classes}}
+        </section>
 
-        <div style="display: flex; gap: 10px;">
-          <form action="/organiser/delete-class/{{_id}}" method="POST" onsubmit="return confirm('Delete this class?')">
-            <button class="button-warning">Delete Class</button>
-          </form>
-          <a href="/organiser/edit-class/{{_id}}" class="button-secondary">Edit</a>
-        </div>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Courses</h2>
+            <span class="count">{{stats.courses}} total</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Course</th><th>Duration</th><th>Sessions</th><th></th></tr></thead>
+              <tbody>
+                {{#courses}}
+                  <tr>
+                    <td><a href="/course/{{_id}}"><strong>{{name}}</strong></a></td>
+                    <td class="muted">{{duration}}</td>
+                    <td class="muted">{{classLabel}}</td>
+                    <td>
+                      <div class="row-actions">
+                        <form action="/organiser/course/delete/{{_id}}" method="post" data-confirm="Delete this course with all its sessions and enrolments?">
+                          <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                {{/courses}}
+              </tbody>
+            </table>
+          </div>
+          {{^courses}}<p class="empty">No courses yet.</p>{{/courses}}
+        </section>
       </div>
-    {{/classes}}
-  </div>
+    </div>
+  </main>
+
+  {{> partials/foot}}
 </body>
 </html>

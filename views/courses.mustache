@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>All Courses</title>
-  <link rel="stylesheet" href="/css/style.css"/>
+  <title>Courses · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="card-container">
-    <h1>All Courses</h1>
+  {{> partials/nav}}
 
-    {{#courses}}
-      <div class="card">
-        <h2>{{name}}</h2>
-        <p>{{description}}</p>
-        <a href="/course/{{_id}}" class="button-secondary">More Details</a>
+  <main class="wrap">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">This season</span>
+        <h1 class="page-title">All courses</h1>
+        <p class="page-lead">From one-weekend intensives to term-long blocks. Open a course to see every session and book a place.</p>
       </div>
-    {{/courses}}
+    </div>
 
-    <a href="/" class="button-warning">Go Back</a>
-  </div>
+    <div class="course-grid">
+      {{#courses}}{{> partials/course_card}}{{/courses}}
+    </div>
+    {{^courses}}<p class="empty">No courses yet. Check back soon.</p>{{/courses}}
+  </main>
+
+  {{> partials/foot}}
 </body>
 </html>

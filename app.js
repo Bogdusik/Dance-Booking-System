@@ -6,6 +6,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 const path = require('path');
 const logger = require('./utils/logger');
+const { initials } = require('./utils/format');
 require('dotenv').config();
 
 const app = express();
@@ -53,7 +54,17 @@ app.use(session({
 app.use(flash());
 
 app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
+  const user = req.session.user || null;
+  const p = req.path;
+  res.locals.user = user;
+  res.locals.isOrganiser = user?.role === 'organiser';
+  res.locals.userInitials = initials(user?.username);
+  res.locals.nav = {
+    courses: p.startsWith('/course') || p.startsWith('/enrol'),
+    dashboard: p.startsWith('/organiser/dashboard') || p.startsWith('/organiser/edit-class') || p.startsWith('/organiser/participants'),
+    classList: p === '/organiser/class-list',
+    users: p === '/organiser/users'
+  };
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   next();

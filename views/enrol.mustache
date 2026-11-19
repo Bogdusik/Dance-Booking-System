@@ -1,31 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Enroll</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>Enrol · {{course.name}} · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="form-container">
-    <h1>Enroll in Course</h1>
+  {{> partials/nav}}
 
-    <form action="/enrol/{{course._id}}" method="post">
-      <input type="text" name="name" placeholder="Your Name" required />
-      <input type="email" name="email" placeholder="Your Email" required />
-      <input type="tel" name="phone" placeholder="Your Phone" required />
+  <main class="wrap">
+    <a href="/course/{{course._id}}" class="back-link">← {{course.name}}</a>
 
-      <select name="classId" class="enroll-select" required>
-        <option value="">-- Select a Class --</option>
-        {{#classes}}
-          <option value="{{_id}}">{{date}} — {{time}} — {{location}}</option>
-        {{/classes}}
-      </select>
+    <div class="detail">
+      <form action="/enrol/{{course._id}}" method="post" class="panel form-grid">
+        <div>
+          <span class="eyebrow">Enrol</span>
+          <h1 class="page-title">{{course.name}}</h1>
+        </div>
 
-      <div style="margin-top: 15px;">
-        <a href="/course/{{course._id}}" class="button-warning">Go Back</a>
-        <button type="submit" class="button-primary">Enroll</button>
-      </div>
-    </form>
-  </div>
+        <fieldset class="field">
+          <legend class="label">Pick a session</legend>
+          <div class="option-list">
+            {{#classes}}
+              <label class="option">
+                <input type="radio" name="classId" value="{{_id}}" required {{#selected}}checked{{/selected}} />
+                <span class="date-chip"><span class="m">{{month}}</span><span class="d">{{day}}</span></span>
+                <span class="session-info">
+                  <span class="session-title">{{weekday}} at {{time}} · {{priceLabel}}</span>
+                  <span class="session-sub">{{location}}</span>
+                </span>
+                <span class="check" aria-hidden="true"></span>
+              </label>
+            {{/classes}}
+          </div>
+          {{^hasClasses}}<p class="empty">No sessions are open for this course yet.</p>{{/hasClasses}}
+        </fieldset>
+
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" type="text" name="name" placeholder="Alex Morgan" autocomplete="name" required />
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="alex@example.com" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" name="phone" placeholder="07700 900123" autocomplete="tel" required />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirm enrolment</button>
+      </form>
+
+      <aside class="panel book-card sticky">
+        <h2>Good to know</h2>
+        <ul class="book-facts">
+          <li><span>Course length</span><strong>{{course.duration}}</strong></li>
+          <li><span>Payment</span><strong>At the studio</strong></li>
+          <li><span>Level</span><strong>All welcome</strong></li>
+        </ul>
+        <p>We only use your details to contact you about this class.</p>
+      </aside>
+    </div>
+  </main>
+
+  {{> partials/foot}}
 </body>
 </html>
