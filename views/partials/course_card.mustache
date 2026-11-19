@@ -1,0 +1,13 @@
+<a class="course-card accent-{{accent}}" href="/course/{{_id}}">
+  <div class="course-poster">
+    <span class="poster-tag">{{duration}}</span>
+  </div>
+  <div class="course-body">
+    <h3>{{name}}</h3>
+    <p>{{description}}</p>
+    <div class="course-meta">
+      <span><strong>{{classLabel}}</strong>{{#nextShort}} · next {{nextShort}}{{/nextShort}}</span>
+      {{#fromPrice}}<span class="price">from {{fromPrice}}</span>{{/fromPrice}}
+    </div>
+  </div>
+</a>

@@ -1,37 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Class List</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>Participants · Dance Booking</title>
+  {{> partials/head}}
 </head>
 <body>
-  <div class="card-container">
-    <h1>All Classes with Participants</h1>
+  {{> partials/nav}}
+
+  <main class="wrap">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Organiser</span>
+        <h1 class="page-title">Participants by session</h1>
+        <p class="page-lead">Everyone who has booked, grouped by session in date order.</p>
+      </div>
+    </div>
 
     {{#classes}}
-      <div class="card">
-        <p><strong>Course:</strong> {{courseName}}</p>
-        <p><strong>Date:</strong> {{date}}, <strong>Time:</strong> {{time}}</p>
-        <p><strong>Location:</strong> {{location}}</p>
-
-        <h2>Participants</h2>
-
-        {{#participants.length}}
-          <ul>
-            {{#participants}}
-              <li>{{name}} — {{email}} — {{phone}}</li>
-            {{/participants}}
-          </ul>
-        {{/participants.length}}
-
-        {{^participants.length}}
-          <p>No participants.</p>
-        {{/participants.length}}
-      </div>
+      <section class="panel class-block">
+        <div class="session">
+          <span class="date-chip"><span class="m">{{month}}</span><span class="d">{{day}}</span></span>
+          <div class="session-info">
+            <span class="session-title">{{courseName}}</span>
+            <span class="session-sub">{{weekday}} at {{time}} · {{location}}</span>
+          </div>
+          <div class="session-side"><span class="badge badge-accent">{{countLabel}}</span></div>
+        </div>
+        {{#hasParticipants}}
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+              <tbody>
+                {{#participants}}
+                  <tr>
+                    <td><span class="cell-person"><span class="avatar">{{initials}}</span>{{name}}</span></td>
+                    <td class="muted">{{email}}</td>
+                    <td class="muted">{{phone}}</td>
+                  </tr>
+                {{/participants}}
+              </tbody>
+            </table>
+          </div>
+        {{/hasParticipants}}
+        {{^hasParticipants}}<p class="empty">No bookings yet.</p>{{/hasParticipants}}
+      </section>
     {{/classes}}
+    {{^classes}}<p class="empty">No sessions scheduled.</p>{{/classes}}
+  </main>
 
-    <a href="/organiser/dashboard" class="button-warning">Back to Dashboard</a>
-  </div>
+  {{> partials/foot}}
 </body>
 </html>

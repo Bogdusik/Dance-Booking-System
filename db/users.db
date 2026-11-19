@@ -1,4 +1,3 @@
-{"username":"admin2","password":"$2a$10$Zik5a7QScuvDLwxujEyVb.eHZhNre7beOfinJeFZXbBOnV3efKvLq","role":"organiser","_id":"IEKBIe3cuAJQHXWW"}
-{"username":"admin","password":"$2a$10$6K1dGwtP5tK.EXPsTeyDqevYAjD44sa06r0LFedh5WlRJ1AQtm77e","role":"organiser","_id":"WdEHSx7rWj4gHPuH"}
-{"username":"Mike","password":"$2a$10$2cbm03xuy.NKttvzUKzMLOTfVkCDRgj06CECkHLc2zGrQE0K1jZSC","role":"user","_id":"kVcnEXYIuEXqK78G"}
-{"username":"elisonMio","password":"$2a$10$QSPjf.3f/cGHSIt0pQRiw.SN4SOwgcs/i5Lh8wX0IskrGePMkChN2","role":"user","_id":"y6IT9hPZjqZ8mfCW"}
+{"username":"maya","password":"$2a$10$62Hfn6aBSkCnJaMcHsFWtOdbnpw7003KIQHvj8wjfAaEJCK5de49a","role":"user","_id":"ds9A1SNvB49FnQTd"}
+{"username":"leo","password":"$2a$10$62Hfn6aBSkCnJaMcHsFWtOdbnpw7003KIQHvj8wjfAaEJCK5de49a","role":"user","_id":"ttFAFV0zrwJZwm87"}
+{"username":"organiser","password":"$2a$10$62Hfn6aBSkCnJaMcHsFWtOdbnpw7003KIQHvj8wjfAaEJCK5de49a","role":"organiser","_id":"vxClZDfnKmCSCxq4"}

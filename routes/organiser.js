@@ -3,7 +3,7 @@ const router = express.Router();
 const util = require('util');
 const organiserController = require('../controllers/organiserController');
 const { isAuthenticated, isOrganiser } = require('../middlewares/authMiddleware');
-const { validateCourse, validateClass, validateIdParam, validateClassIdParam } = require('../utils/validators');
+const { validateCourse, validateClass, validateClassUpdate, validateIdParam, validateClassIdParam } = require('../utils/validators');
 const { asyncHandler } = require('../middlewares/errorHandler');
 const logger = require('../utils/logger');
 
@@ -48,7 +48,7 @@ router.post(
   isAuthenticated,
   isOrganiser,
   validateIdParam,
-  validateClass,
+  validateClassUpdate,
   organiserController.updateClass
 );
 

@@ -42,7 +42,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Flash error message for form submissions
-  if (req.flash) {
+  if (req.flash && statusCode !== 404) {
     req.flash('error_msg', message);
   }
 
@@ -50,7 +50,7 @@ const errorHandler = (err, req, res, next) => {
   if (req.accepts('html')) {
     // For 404 errors, send status instead of redirect (especially in tests)
     if (statusCode === 404) {
-      return res.status(404).send('Not Found');
+      return res.status(404).render('not_found');
     }
     // For HTML requests, redirect or render error page
     const redirectPath = req.originalUrl.startsWith('/auth') 

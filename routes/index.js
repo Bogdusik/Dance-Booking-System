@@ -8,14 +8,15 @@ const { validateIdParam, validateEnrolment } = require('../utils/validators');
 const { asyncHandler } = require('../middlewares/errorHandler');
 const logger = require('../utils/logger');
 
+const courseDb = require('../models/courseModel');
+const { formatClass, byDateTime } = require('../utils/format');
+
+const findCourse = util.promisify(courseDb.findOne).bind(courseDb);
 const findClasses = util.promisify(classDb.find).bind(classDb);
 const findEnrolment = util.promisify(enrolmentDb.findOne).bind(enrolmentDb);
 const insertEnrolment = util.promisify(enrolmentDb.insert).bind(enrolmentDb);
 
-router.get('/', (req, res) => {
-  const isOrganiser = req.session?.user?.role === 'organiser';
-  res.render('index', { isOrganiser });
-});
+router.get('/', courseController.home);
 
 router.get('/courses', courseController.getCourses);
 
@@ -23,8 +24,17 @@ router.get('/course/:id', validateIdParam, courseController.getCourseDetail);
 
 router.get('/enrol/:id', validateIdParam, asyncHandler(async (req, res) => {
   const courseId = req.params.id;
-  const classes = await findClasses({ courseId });
-  res.render('enrol', { course: { _id: courseId }, classes });
+  const course = await findCourse({ _id: courseId });
+  if (!course) {
+    const error = new Error('Course not found');
+    error.statusCode = 404;
+    throw error;
+  }
+  const selected = req.query.class;
+  const classes = (await findClasses({ courseId }))
+    .sort(byDateTime)
+    .map(cls => ({ ...formatClass(cls), selected: cls._id === selected }));
+  res.render('enrol', { course, classes, hasClasses: classes.length > 0 });
 }));
 
 router.post('/enrol/:id', validateIdParam, validateEnrolment, asyncHandler(async (req, res) => {

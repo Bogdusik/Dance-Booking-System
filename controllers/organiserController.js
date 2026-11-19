@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const util = require('util');
 const logger = require('../utils/logger');
+const { formatClass, byDateTime, initials, summariseCourse } = require('../utils/format');
 const { asyncHandler } = require('../middlewares/errorHandler');
 
 const courseDb = require('../models/courseModel');
@@ -22,15 +23,28 @@ const insertUser = promisify(userDb.insert).bind(userDb);
 const removeCourse = promisify(courseDb.remove).bind(courseDb);
 const removeCourseClasses = promisify(classDb.remove).bind(classDb);
 const removeUser = userDb.remove;
+const findEnrolments = promisify(enrolmentDb.find).bind(enrolmentDb);
 const removeClassEnrolments = promisify(enrolmentDb.remove).bind(enrolmentDb);
 
 exports.dashboard = asyncHandler(async (req, res) => {
-  const [courses, classes] = await Promise.all([
+  const [courses, classes, enrolments] = await Promise.all([
     findCourses({}),
-    findClasses({})
+    findClasses({}),
+    findEnrolments({})
   ]);
+  courses.sort((a, b) => a.name.localeCompare(b.name));
+  const names = new Map(courses.map(c => [c._id, c.name]));
+  const counts = enrolments.reduce((acc, e) => acc.set(e.classId, (acc.get(e.classId) || 0) + 1), new Map());
   logger.debug('Dashboard loaded', { coursesCount: courses.length, classesCount: classes.length });
-  res.render('dashboard', { courses, classes });
+  res.render('dashboard', {
+    courses: courses.map((course, i) => summariseCourse(course, classes, i)),
+    classes: classes.sort(byDateTime).map(cls => ({
+      ...formatClass(cls),
+      courseName: names.get(cls.courseId) || 'Unknown course',
+      enrolled: counts.get(cls._id) || 0
+    })),
+    stats: { courses: courses.length, classes: classes.length, enrolments: enrolments.length }
+  });
 });
 
 exports.addCourse = asyncHandler(async (req, res) => {
@@ -73,7 +87,8 @@ exports.editClassForm = asyncHandler(async (req, res) => {
       req.flash('error_msg', 'Class not found');
       return res.redirect('/organiser/dashboard');
     }
-    res.render('edit_class', { cls });
+    const course = await findCourseById({ _id: cls.courseId });
+    res.render('edit_class', { cls, courseName: course?.name || 'Unknown course' });
   } catch (err) {
     logger.error('Failed to load class for editing', { error: err.message, classId: req.params.id });
     throw err;
@@ -103,17 +118,18 @@ exports.listParticipants = asyncHandler(async (req, res) => {
     findEnrolments({ classId: cls._id })
   ]);
 
+  const participants = enrolments.map(({ name, email, phone }) => ({ name, email, phone, initials: initials(name) }));
   res.render('manage_course', {
     cls: {
-      ...cls,
-      participants: enrolments.map(({ name, email, phone }) => ({ name, email, phone }))
+      ...formatClass(cls),
+      participants
     },
+    hasParticipants: participants.length > 0,
     duration: course?.duration || 'N/A',
     courseName: course?.name || 'Unknown Course'
   });
 });
 
-const findEnrolments = util.promisify(enrolmentDb.find).bind(enrolmentDb);
 
 exports.fullClassList = asyncHandler(async (req, res) => {
   const [classes, allCourses, allEnrolments] = await Promise.all([
@@ -129,23 +145,32 @@ exports.fullClassList = asyncHandler(async (req, res) => {
     return acc;
   }, {});
 
-  const enriched = classes.map(cls => ({
-    ...cls,
-    courseName: courseMap.get(cls.courseId)?.name || 'Unknown',
-    participants: (enrolmentsByClass[cls._id] || []).map(({ name, email, phone }) => ({ name, email, phone }))
-  }));
+  const enriched = classes.sort(byDateTime).map(cls => {
+    const participants = (enrolmentsByClass[cls._id] || []).map(({ name, email, phone }) => ({
+      name, email, phone, initials: initials(name)
+    }));
+    return {
+      ...formatClass(cls),
+      courseName: courseMap.get(cls.courseId)?.name || 'Unknown',
+      participants,
+      hasParticipants: participants.length > 0,
+      countLabel: participants.length === 1 ? '1 dancer' : `${participants.length} dancers`
+    };
+  });
 
   res.render('class_list', { classes: enriched });
 });
 
 exports.manageUsers = asyncHandler(async (req, res) => {
   const allUsers = await findAllUsers({});
+  allUsers.sort((a, b) => a.username.localeCompare(b.username));
   const organisers = allUsers.filter(u => u.role === 'organiser').map(u => ({
     ...u,
+    initials: initials(u.username),
     isSelf: req.session.user?._id === u._id
   }));
-  const users = allUsers.filter(u => u.role === 'user');
-  res.render('manage_users', { organisers, users });
+  const users = allUsers.filter(u => u.role === 'user').map(u => ({ ...u, initials: initials(u.username) }));
+  res.render('manage_users', { organisers, users, hasUsers: users.length > 0 });
 });
 
 exports.deleteUser = asyncHandler(async (req, res) => {
