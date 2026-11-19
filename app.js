@@ -11,6 +11,8 @@ require('dotenv').config();
 
 const app = express();
 
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
+
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 app.set('views', path.join(__dirname, 'views'));
